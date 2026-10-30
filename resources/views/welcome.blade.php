@@ -4,11 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ config('app.name', 'Jorvellan') }}</title>
+        <title>{{ $title ?? config('app.name', 'Jorvellan') }}</title>
+        <meta name="description" content="{{ $description ?? 'AI process discovery and workflow intelligence for enterprise operations.' }}">
+        <link rel="canonical" href="{{ url()->current() }}">
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.jsx'])
     </head>
     <body>
-        <div id="app"></div>
+        <div id="app" data-page="{{ $page ?? 'home' }}"></div>
     </body>
 </html>
