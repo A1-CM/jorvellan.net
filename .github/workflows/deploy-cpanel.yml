@@ -1,0 +1,99 @@
+name: Deploy Jorvellan to cPanel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      public_dir:
+        description: auto, public_html, or a directory relative to cPanel home
+        default: auto
+        type: string
+      allow_index_replace:
+        description: Replace an existing unrelated index.php in the selected document root
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 30
+    concurrency:
+      group: cpanel-jorvellan-https://jorvellan.net
+      cancel-in-progress: false
+    steps:
+      - name: Check out Laravel application
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          path: app
+      - name: Check out deployment toolkit
+        uses: actions/checkout@v4
+        with:
+          repository: A1-CM/.github
+          ref: v1.0.8
+          path: toolkit
+      - name: Set up PHP 8.5.12
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5.12'
+          extensions: mbstring, fileinfo, openssl, pdo_sqlite, sqlite3, pdo_mysql
+          tools: composer:v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install and check application
+        working-directory: app
+        run: |
+          composer install --prefer-dist --no-interaction --no-progress
+          cp .env.example .env
+          php artisan key:generate --force
+          php artisan test
+      - name: Verify deployment toolkit
+        working-directory: toolkit
+        env:
+          PROJECT_ROOT: ${{ github.workspace }}/app
+        run: python3 -m unittest discover -s scripts/tests -q
+      - name: Build browser assets
+        working-directory: app
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+            npm run build
+          elif [ -f package.json ]; then
+            npm install --no-audit --no-fund
+            npm run build
+          fi
+      - name: Prepare production dependencies
+        working-directory: app
+        run: composer install --no-dev --prefer-dist --no-interaction --no-progress --classmap-authoritative
+      - name: Install deployment client
+        run: python3 -m pip install requests
+      - name: Deploy through cPanel API
+        env:
+          PROJECT_ROOT: ${{ github.workspace }}/app
+          CPANEL_HOST: ${{ vars.CPANEL_HOST }}
+          CPANEL_USERNAME: ${{ vars.CPANEL_USERNAME }}
+          CPANEL_HOME: ${{ vars.CPANEL_HOME }}
+          CPANEL_API_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
+          PROJECT_SLUG: jorvellan
+          PROJECT_NAME: Jorvellan
+          APP_URL: https://jorvellan.net
+          CPANEL_DOMAIN: ${{ vars.CPANEL_DOMAIN }}
+          CPANEL_PUBLIC_DIR: ${{ inputs.public_dir || vars.CPANEL_PUBLIC_DIR || 'auto' }}
+          CPANEL_ALLOW_INDEX_REPLACE: ${{ inputs.allow_index_replace || vars.CPANEL_ALLOW_INDEX_REPLACE == 'true' }}
+          CPANEL_HEALTH_PATH: ${{ vars.CPANEL_HEALTH_PATH || '/up' }}
+          CPANEL_DB_NAME: ${{ vars.CPANEL_DB_NAME }}
+          CPANEL_DB_USER: ${{ vars.CPANEL_DB_USER }}
+          DB_HOST: ${{ vars.DB_HOST }}
+          DB_PORT: ${{ vars.DB_PORT }}
+          MAIL_HOST: ${{ vars.MAIL_HOST }}
+          MAIL_PORT: ${{ vars.MAIL_PORT }}
+          MAIL_SCHEME: ${{ vars.MAIL_SCHEME }}
+          APP_ENV_EXTRA: ${{ secrets.APP_ENV_EXTRA }}
+        run: python3 toolkit/scripts/deploy_cpanel.py
