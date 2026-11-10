@@ -70,7 +70,7 @@ Continue the marketing site in these small, reviewable phases. Complete each pha
 - Confirm the proposed/future product claims and all sample content remain clearly distinguished from available capabilities.
 - Build the production frontend bundle and record any remaining review items before treating the marketing site as ready to publish.
 
-**Next phase to start:** M0 — Repair contrast and lock the visual system. The last source review found dark hero text colors assigned over a dark hero background; fix and verify that before judging the rest of the visual refresh.
+**M0 status:** The shared palette, type scale, corner system and focus styles are implemented, and the hero and other dark sections now have explicit light foreground colors. Computed contrast checks and the production asset build pass. Desktop/mobile browser inspection is still pending; complete that visual check before moving to M1.
 
 ### Phase 2: Authenticated application
 
@@ -117,4 +117,5 @@ Before moving to the next page:
 - Marketing pages now have separate routes for Home, Product, Features, About, Contact, How it works, Terms, and Privacy Policy, with shared site navigation and page-specific titles and descriptions.
 - The Product page presents the product preview and proposed NVIDIA options; features and workflow pages distinguish the initial concept from future integrations and automation.
 - Terms and Privacy Policy are explicitly marked as drafts for Jorvellan review. Confirm actual hosting logs, analytics, cookies, data retention, processors, legal entity details, governing law, and privacy request methods before publication.
+- M0 visual foundation: implemented; checked text color pairs exceed 4.5:1 and the focus ring exceeds 3:1 against light and dark surfaces. The frontend production build succeeds. Browser-based desktop/mobile inspection remains pending.
 - Authenticated application: not started.
