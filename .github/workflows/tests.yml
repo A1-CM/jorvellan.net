@@ -28,9 +28,13 @@ jobs:
           node-version: '22'
       - name: Install PHP dependencies
         run: composer install --no-interaction --prefer-dist
-      - name: Run Laravel checks
-        run: php artisan test
+      - name: Prepare Laravel environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
       - name: Build frontend
         run: |
           npm ci
           npm run build
+      - name: Run Laravel checks
+        run: php artisan test
