@@ -50,9 +50,9 @@ Create a GitHub Actions environment named **production**. Add these environment 
 | `CPANEL_ALLOW_INDEX_REPLACE` | Optional `true` only if replacing an unrelated existing `index.php` is approved |
 | `CPANEL_DB_NAME`, `CPANEL_DB_USER` | Optional database name/user overrides |
 | `DB_HOST`, `DB_PORT` | Optional database connection overrides; defaults are `localhost:3306` |
-| `MAIL_HOST`, `MAIL_PORT`, `MAIL_SCHEME` | Optional SMTP overrides; defaults are `mail.<domain>`, `465`, and `smtps` |
+| `MAIL_PORT`, `MAIL_SCHEME` | Optional SMTP overrides; defaults are `465` and `smtps` |
 
-Add `CPANEL_API_TOKEN` as a **production environment secret**. It needs cPanel API permissions to manage files, MySQL databases and users, and email accounts. Put optional application settings in `APP_ENV_EXTRA` as a production environment secret containing newline-separated `KEY=value` entries. Do not store deployment settings as repository variables; the deploy and rollback jobs bind the `production` environment directly.
+Add `CPANEL_API_TOKEN` and `MAIL_HOST` as production environment secrets. `MAIL_HOST` is required and must match the SMTP server hostname and its TLS certificate. The deployment creates `no-reply@jorvellan.net`, generates its password, and configures that mailbox as the sender. `CPANEL_API_TOKEN` needs cPanel API permissions to manage files, MySQL databases and users, and email accounts. Put optional application settings in `APP_ENV_EXTRA` as a production environment secret containing newline-separated `KEY=value` entries. Do not store deployment settings as repository variables; the deploy and rollback jobs bind the `production` environment directly.
 
 The deployment URL is set to `https://jorvellan.net` in both workflows and `.env.example`. Pushes to `main` deploy automatically. The workflow can also be run manually to choose a document root or permit replacement of an existing unrelated `index.php`. Before first deployment, confirm in cPanel that the selected document root belongs to this domain and is not shared with another live site.
 
