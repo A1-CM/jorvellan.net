@@ -107,7 +107,7 @@ After the marketing pages are complete, build the application in this order:
 ## Project setup and deployment
 
 - Framework: Laravel 13 with React 19 and Vite.
-- PHP requirement: exactly 8.5.12 in Composer and deployment workflows.
+- PHP requirement: 8.4.1 or newer in the 8.4 series in Composer and deployment workflows.
 - Deployment origin: `https://jorvellan.net`.
 - cPanel deployment and rollback use the shared `A1-CM/.github` toolkit. GitHub cPanel variables and secrets belong to the `production` environment.
 - Keep private Laravel code and `.env` outside the domain document root, and preserve the deployment toolkit's release and rollback behavior.
