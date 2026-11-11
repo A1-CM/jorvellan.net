@@ -37,10 +37,10 @@ jobs:
           repository: A1-CM/.github
           ref: v1.0.9
           path: toolkit
-      - name: Set up PHP 8.5.12
+      - name: Set up PHP 8.5
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.5.12'
+          php-version: '8.5'
           extensions: mbstring, fileinfo, openssl, pdo_sqlite, sqlite3, pdo_mysql
           tools: composer:v2
       - name: Set up Node.js
