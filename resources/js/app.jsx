@@ -525,11 +525,11 @@ function App() {
     const reopenCookieSettings = () => setCookieChoice(null);
     const navigationItems = [
         { page: 'home', label: 'Home', href: '/' },
-        { page: 'product', label: 'Product', href: page === 'home' ? '#product' : '/product' },
         { page: 'features', label: 'Features', href: page === 'home' ? '#features' : '/features' },
         { page: 'how-it-works', label: 'How it works', href: page === 'home' ? '#how-it-works' : '/how-it-works' },
         { page: 'about', label: 'About', href: page === 'home' ? '#about' : '/about' },
         { page: 'pricing', label: 'Pricing', href: '/pricing' },
+        { page: 'contact', label: 'Contact', href: '/contact' },
     ];
 
     useEffect(() => {
@@ -563,7 +563,7 @@ function App() {
                     <nav id="primary-navigation" className={menuOpen ? 'main-nav open' : 'main-nav'} aria-label="Main navigation">
                         {navigationItems.map((item) => <a key={item.page} className={page === item.page ? 'is-current' : undefined} href={item.href} aria-current={page === item.page ? 'page' : undefined} onClick={closeMenu}>{item.label}</a>)}
                     </nav>
-                    <a className={`nav-contact${page === 'contact' ? ' is-current' : ''}`} href={page === 'home' ? '#contact' : '/contact'} aria-current={page === 'contact' ? 'page' : undefined} onClick={closeMenu}>Contact <Arrow /></a>
+                    <a className={`nav-product${page === 'product' ? ' is-current' : ''}`} href="/product" aria-current={page === 'product' ? 'page' : undefined} onClick={closeMenu}>Explore product <Arrow /></a>
                 </div>
             </header>
 
