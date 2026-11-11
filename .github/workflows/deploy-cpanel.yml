@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: A1-CM/.github
-          ref: 146997b01d2b6ed030fe1e0f2345fb96e4466137
+          ref: v1.0.10
           path: toolkit
       - name: Set up PHP 8.4
         uses: shivammathur/setup-php@v2
