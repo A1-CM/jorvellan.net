@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: A1-CM/.github
-          ref: v1.0.9
+          ref: 6798ac296827c15622001e6c4b776495911b7ec7
           path: toolkit
       - name: Install rollback client
         run: python3 -m pip install requests
