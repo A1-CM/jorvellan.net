@@ -4,7 +4,7 @@ Jorvellan is a Laravel 13 application with a React 19 frontend, built with Vite.
 
 ## Requirements
 
-- PHP 8.5.12 with SQLite, mbstring, fileinfo, and OpenSSL extensions
+- PHP 8.4.1 or newer in the 8.4 series with SQLite, mbstring, fileinfo, and OpenSSL extensions
 - Composer 2
 - Node.js 22 or newer
 - SQLite with FTS support
@@ -56,7 +56,7 @@ Add `CPANEL_API_TOKEN` and `MAIL_HOST` as production environment secrets. `MAIL_
 
 The deployment URL is set to `https://jorvellan.net` in both workflows and `.env.example`. Pushes to `main` deploy automatically. The workflow can also be run manually to choose a document root or permit replacement of an existing unrelated `index.php`. Before first deployment, confirm in cPanel that the selected document root belongs to this domain and is not shared with another live site.
 
-The first deploy generates and stores private Laravel, database, and mailbox credentials under `CPANEL_HOME/jorvellan-deploy-state.json` with owner-only permissions. Back up this file securely and do not delete or rename it. Keep the private `jorvellan-app` directory outside the public document root. cPanel needs PHP 8.5.12 with PDO MySQL, mbstring, fileinfo, and OpenSSL, plus MySQL/MariaDB with InnoDB full-text support.
+The first deploy generates and stores private Laravel, database, and mailbox credentials under `CPANEL_HOME/jorvellan-deploy-state.json` with owner-only permissions. Back up this file securely and do not delete or rename it. Keep the private `jorvellan-app` directory outside the public document root. cPanel needs PHP 8.4.1 or newer in the 8.4 series with PDO MySQL, mbstring, fileinfo, and OpenSSL, plus MySQL/MariaDB with InnoDB full-text support.
 
 ### Rollback
 
