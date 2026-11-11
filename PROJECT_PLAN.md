@@ -70,7 +70,11 @@ Continue the marketing site in these small, reviewable phases. Complete each pha
 - Confirm the proposed/future product claims and all sample content remain clearly distinguished from available capabilities.
 - Build the production frontend bundle and record any remaining review items before treating the marketing site as ready to publish.
 
-**M0 status:** The shared palette, type scale, corner system and focus styles are implemented, and the hero and other dark sections now have explicit light foreground colors. Computed contrast checks and the production asset build pass. Desktop/mobile browser inspection is still pending; complete that visual check before moving to M1.
+**M0 status:** The shared palette, type scale, corner system and focus styles are implemented, and the hero and other dark sections now have explicit light foreground colors. Computed contrast checks and the production asset build pass. Desktop/mobile browser inspection remains pending and should be completed during the responsive shell review.
+
+**M1 status:** The shared header now includes a Home link, current-page states, and a mobile menu that closes on selection, outside click, or Escape. The footer uses grouped, readable links with active legal/page states. Supporting page heroes now vary by route while retaining the shared visual system. The production frontend build and Laravel route list pass; desktop/mobile browser inspection remains pending.
+
+**M2 status:** The Home page now leads with the operations problem of process context getting lost across teams, then moves through the challenge, annotated illustrative workspace, capabilities, human-reviewed workflow, company background and contact action. The production frontend build and Laravel route list pass; desktop/mobile browser inspection remains pending.
 
 ### Phase 2: Authenticated application
 
@@ -117,5 +121,7 @@ Before moving to the next page:
 - Marketing pages now have separate routes for Home, Product, Features, About, Contact, How it works, Terms, and Privacy Policy, with shared site navigation and page-specific titles and descriptions.
 - The Product page presents the product preview and proposed NVIDIA options; features and workflow pages distinguish the initial concept from future integrations and automation.
 - Terms and Privacy Policy are explicitly marked as drafts for Jorvellan review. Confirm actual hosting logs, analytics, cookies, data retention, processors, legal entity details, governing law, and privacy request methods before publication.
-- M0 visual foundation: implemented; checked text color pairs exceed 4.5:1 and the focus ring exceeds 3:1 against light and dark surfaces. The frontend production build succeeds. Browser-based desktop/mobile inspection remains pending.
+- M0 visual foundation: implemented; checked text color pairs exceed 4.5:1 and the focus ring exceeds 3:1 against light and dark surfaces. Browser-based desktop/mobile inspection remains pending.
+- M1 shared marketing shell: implemented; production frontend build and route list pass. Browser-based desktop/mobile inspection remains pending.
+- M2 Home story: implemented with a labeled illustrative workspace preview; production frontend build and route list pass. Browser-based desktop/mobile inspection remains pending.
 - Authenticated application: not started.
