@@ -8,9 +8,11 @@ use App\Models\ProcessObservation;
 use App\Models\ProcessRecord;
 use App\Models\SimulatedPayment;
 use App\Models\Subscription;
+use App\Services\TurnstileVerifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Validator as ValidationValidator;
@@ -74,7 +76,33 @@ class PortalController extends Controller
         });
 
         if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput($request->except(['card_number', 'card_expiry', 'card_cvc']));
+            return back()->withErrors($validator)->withInput($request->except(['card_number', 'card_expiry', 'card_cvc', 'cf-turnstile-response']));
+        }
+
+        $turnstile = app(TurnstileVerifier::class);
+        if (! $turnstile->isConfigured() && ! app()->environment('testing')) {
+            return back()->withErrors(['turnstile' => 'The security check is not configured. Please contact support@jorvellan.net.'])->withInput($request->except(['card_number', 'card_expiry', 'card_cvc', 'cf-turnstile-response']));
+        }
+
+        if ($turnstile->isConfigured()) {
+            $token = $request->input('cf-turnstile-response');
+            $safeInput = $request->except(['card_number', 'card_expiry', 'card_cvc', 'cf-turnstile-response']);
+
+            if (! is_string($token) || $token === '' || strlen($token) > 2048) {
+                return back()->withErrors(['turnstile' => 'Complete the security check before continuing.'])->withInput($safeInput);
+            }
+
+            try {
+                $verified = $turnstile->verify($token, 'checkout');
+            } catch (\Throwable $exception) {
+                Log::warning('Checkout Turnstile verification is unavailable.', ['exception' => $exception::class]);
+
+                return back()->withErrors(['turnstile' => 'The security check is temporarily unavailable. Please try again.'])->withInput($safeInput);
+            }
+
+            if (! $verified) {
+                return back()->withErrors(['turnstile' => 'The security check failed or expired. Please try again.'])->withInput($safeInput);
+            }
         }
 
         $reference = (string) Str::uuid();
@@ -166,6 +194,12 @@ class PortalController extends Controller
 
     private function page(string $page, string $title, string $description, array $portalData = []): View
     {
+        $turnstile = app(TurnstileVerifier::class);
+        $portalData = [
+            'turnstileEnabled' => $turnstile->isConfigured(),
+            'turnstileSiteKey' => $turnstile->isConfigured() ? config('services.turnstile.site_key') : null,
+        ] + $portalData;
+
         return view('welcome', compact('page', 'title', 'description', 'portalData'));
     }
 

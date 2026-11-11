@@ -180,6 +180,16 @@ a:focus-visible,button:focus-visible { outline: 2px solid #444bad; outline-offse
 .checkout-section-heading h2 { margin: 0; color: #252742; font-size: 20px; }
 .checkout-section-heading p { margin: 4px 0 0; color: #74798b; font-size: 13px; }
 .checkout-form .button { justify-content: center; width: fit-content; min-width: 235px; }
+.turnstile-field { display: grid; justify-items: start; gap: 8px; min-width: 0; }
+.turnstile-field .cf-turnstile { min-height: 65px; max-width: 100%; }
+.turnstile-status { display: flex; align-items: center; gap: 8px; margin: 0; color: #73758a; font-size: 13px; }
+.turnstile-status.is-complete { color: #24765b; }
+.turnstile-spinner { width: 13px; height: 13px; border: 2px solid #d9d7ea; border-top-color: #7769dc; border-radius: 50%; animation: turnstile-spin .8s linear infinite; }
+.turnstile-status.is-complete .turnstile-spinner { display: none; }
+.turnstile-unavailable { padding: 14px 16px; color: #55586e; background: #f4f2fa; border: 1px solid #e0ddef; border-radius: 14px; font-size: 14px; }
+.turnstile-unavailable a { color: #5549ba; font-weight: 700; }
+.contact-form button:disabled,.checkout-form button:disabled { opacity: .55; cursor: not-allowed; }
+@keyframes turnstile-spin { to { transform: rotate(360deg); } }
 .no-charge-callout { padding: 14px 16px; color: #4c4776; background: #f0effc; border: 1px solid #dfdcf6; border-radius: 14px; font-size: 13px; line-height: 1.65; }
 .order-summary { position: sticky; top: 24px; padding: 26px; background: #fff; border: 1px solid #e3e0eb; border-radius: 22px; }
 .order-summary h2 { margin: 8px 0; color: #232541; font-size: 27px; }

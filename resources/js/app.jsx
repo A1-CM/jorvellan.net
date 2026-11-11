@@ -8,6 +8,28 @@ const sampleProcesses = [
     { name: 'Supplier approval', department: 'Procurement', stages: 7, status: 'Bottleneck', tone: 'rose' },
 ];
 
+let turnstileScriptPromise;
+
+function loadTurnstileScript() {
+    if (window.turnstile) {
+        return Promise.resolve();
+    }
+
+    if (!turnstileScriptPromise) {
+        turnstileScriptPromise = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+            script.async = true;
+            script.defer = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    return turnstileScriptPromise;
+}
+
 function Arrow() {
     return <span className="arrow" aria-hidden="true">↗</span>;
 }
@@ -158,6 +180,7 @@ function AddressCards() {
 
 function MarketingPage({ page, portalData = {} }) {
     const content = marketingPages[page];
+    const [contactVerified, setContactVerified] = useState(false);
     if (page === 'terms' || page === 'privacy') {
         return <main className="legal-page"><section className="page-hero legal-hero"><div className="site-container"><p className="eyebrow">{content.eyebrow}</p><h1>{content.title}</h1><p>{content.intro}</p><div className="draft-notice">Draft for Jorvellan legal review · Confirm details before publication</div></div></section><article className="legal-copy site-container">
             <p className="legal-updated">Last updated: 11 November 2026 · Jorvellan is a product concept; these pages should receive jurisdiction-specific legal review before launch.</p>
@@ -178,8 +201,8 @@ function MarketingPage({ page, portalData = {} }) {
                 <h2>2. Who is responsible</h2><p>Jorvellan operates through Jorvellan (Pvt) Ltd in Sri Lanka and Jorvellan Inc. in the United States. The relevant Jorvellan entity handles website inquiries and coordinates a response. For questions about the entity responsible for a particular interaction, contact <a href="mailto:support@jorvellan.net">support@jorvellan.net</a>.</p>
                 <h2>3. Information you provide</h2><p>The contact form asks for your name, email address and message; company, phone and subject are optional. If you choose a plan in the simulated checkout, we collect your name, email and company if provided, and create a simulated subscription record. Do not submit confidential or sensitive personal information in a message.</p>
                 <h2>4. Simulated card information</h2><p>Paid-plan demo checkout asks for a card number, expiry date and security code only to validate the format and demonstrate a successful flow. No payment processor or bank is contacted and no charge or authorization occurs. The application records only a simulated status, amount, card brand and last four digits. The full card number, expiry date and security code are not saved in the application database or session. Use the provided 4242 test card pattern or another Luhn-valid test number; do not enter a real card.</p>
-                <h2>5. How we use information</h2><p>We use contact details and message content to respond to your inquiry, route it to the support team, maintain an inquiry record and protect the website. Simulated checkout information is used to display the demo confirmation and understand aggregate interest in draft plans. We do not use the demo to make automated decisions about you.</p>
-                <h2>6. Cookies, logs and security</h2><p>The site uses the session and security mechanisms needed for navigation, form protection, validation feedback and the simulated checkout confirmation. The web host and application may process technical request data, such as IP address, browser details, timestamps and error records, to deliver and secure the site. No advertising or analytics tools are intentionally included in this site build. Your browser may also store ordinary functional cookies.</p>
+                <h2>5. How we use information</h2><p>We use contact details and message content to respond to your inquiry, route it to the support team, maintain an inquiry record and protect the website. Simulated checkout information is used to display the demo confirmation and understand aggregate interest in draft plans. Cloudflare Turnstile may process technical and browser signals when you open a page with a protected form and complete the security check to help distinguish people from automated traffic. We do not use the demo to make automated decisions about you.</p>
+                <h2>6. Cookies, logs and security</h2><p>The site uses the session and security mechanisms needed for navigation, form protection, validation feedback and the simulated checkout confirmation. The web host and application may process technical request data, such as IP address, browser details, timestamps and error records, to deliver and secure the site. Cloudflare provides Turnstile verification under its own privacy terms; see <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noreferrer">Cloudflare’s Privacy Policy</a>. No advertising or analytics tools are intentionally included in this site build. Your browser may also store ordinary functional cookies.</p>
                 <h2>7. Email and service providers</h2><p>Contact messages are stored in the application database and sent to support@jorvellan.net through the configured email service. Website hosting, infrastructure and email providers may process information on Jorvellan’s behalf to operate the site. Their identities, locations and applicable safeguards depend on the production providers selected by Jorvellan.</p>
                 <h2>8. Retention</h2><p>Contact and simulated checkout records are kept in the application database. They should be retained only as long as needed to handle the inquiry, operate the demo, maintain business records, protect the service, or meet legal obligations. A fixed deletion schedule has not been set for this demo, so contact support for a record-specific request.</p>
                 <h2>9. International handling</h2><p>Jorvellan has offices in Sri Lanka and the United States. Depending on the hosting and email configuration, information may be handled in either country or in other locations used by service providers. Contact us for details relevant to a particular inquiry.</p>
@@ -223,7 +246,8 @@ function MarketingPage({ page, portalData = {} }) {
             <label>Subject <span>Optional</span><input name="subject" defaultValue={portalData.old?.subject || ''} maxLength="180" /><FieldErrors errors={portalData.errors} name="subject" /></label>
             <label>How can we help?<textarea name="message" minLength="20" maxLength="6000" required rows="6" aria-invalid={Boolean(portalData.errors?.message)}>{portalData.old?.message || ''}</textarea><FieldErrors errors={portalData.errors} name="message" /></label>
             <label className="form-consent"><input name="privacy_acknowledged" type="checkbox" value="1" required /><span>I agree that Jorvellan may use these details to respond to my inquiry. <a href="/privacy">Privacy Policy</a>.</span></label>
-            <button className="button button-mint" type="submit">Send message <Arrow /></button>
+            <TurnstileField enabled={portalData.turnstileEnabled} siteKey={portalData.turnstileSiteKey} action="contact" error={portalData.errors?.turnstile?.[0]} onVerified={setContactVerified} />
+            <button className="button button-mint" type="submit" disabled={!portalData.turnstileEnabled || !contactVerified}>Send message <Arrow /></button>
         </form></div></div></section>}
         <section className="page-cta"><div className="site-container"><div><p className="eyebrow eyebrow-light">JORVELLAN · ENTERPRISE OPERATIONS</p><h2>Make the next improvement easier to see.</h2></div><a className="button button-mint" href="/contact">Talk with Jorvellan <Arrow /></a></div></section>
     </main>;
@@ -237,10 +261,70 @@ function FieldErrors({ errors, name }) {
     return errors?.[name]?.[0] ? <small className="field-error">{errors[name][0]}</small> : null;
 }
 
+function TurnstileField({ enabled, siteKey, action, error, onVerified }) {
+    const widgetRef = useRef(null);
+    const statusRef = useRef(null);
+
+    useEffect(() => {
+        if (!enabled || !siteKey || !widgetRef.current) {
+            return undefined;
+        }
+
+        let widgetId;
+        let disposed = false;
+        const setStatus = (message, verified = false) => {
+            if (statusRef.current) {
+                statusRef.current.textContent = message;
+                statusRef.current.classList.toggle('is-complete', verified);
+            }
+            onVerified(verified);
+        };
+
+        loadTurnstileScript().then(() => {
+            if (disposed || !widgetRef.current) {
+                return;
+            }
+
+            widgetId = window.turnstile.render(widgetRef.current, {
+                sitekey: siteKey,
+                action,
+                theme: 'light',
+                size: 'flexible',
+                callback: () => setStatus('Security check complete.', true),
+                'expired-callback': () => setStatus('Security check expired. Complete it again to continue.'),
+                'error-callback': (errorCode) => {
+                    const code = String(errorCode ?? '').replace(/[^0-9]/g, '').slice(0, 12);
+                    setStatus(`Security check could not load${code ? ` (code ${code})` : ''}. Refresh the page or try another network.`);
+                },
+            });
+        }).catch(() => {
+            setStatus('Security check could not load. Refresh the page or try another network.');
+        });
+
+        return () => {
+            disposed = true;
+            if (widgetId !== undefined && window.turnstile) {
+                window.turnstile.remove(widgetId);
+            }
+        };
+    }, [action, enabled, onVerified, siteKey]);
+
+    if (!enabled || !siteKey) {
+        return <div className="turnstile-unavailable" role="status">Security verification is being configured. You can reach us at <a href="mailto:support@jorvellan.net">support@jorvellan.net</a>.</div>;
+    }
+
+    return <div className="turnstile-field">
+        <div className="cf-turnstile" ref={widgetRef} />
+        <p className="turnstile-status" ref={statusRef} role="status" aria-live="polite"><span className="turnstile-spinner" aria-hidden="true" />Loading security check…</p>
+        {error && <small className="field-error">{error}</small>}
+    </div>;
+}
+
 function PortalScreen({ page, data }) {
     const processes = data.processes || [];
     const [section, setSection] = useState('overview');
     const [selectedProcess, setSelectedProcess] = useState(processes[0]?.name || '');
+    const [checkoutVerified, setCheckoutVerified] = useState(false);
 
     if (page === 'pricing') {
         return <main className="portal-page"><section className="portal-hero"><div className="site-container"><p className="eyebrow">DRAFT PLAN OPTIONS</p><h1>Choose a starting point.</h1><p>These proposed monthly prices are illustrative planning figures. Checkout is a no-charge simulation; no paid service is activated.</p><span className="simulation-note">Draft pricing · For discussion only · No payment processing</span></div></section><section className="site-container pricing-grid-section"><div className="pricing-grid">{(data.plans || []).map((plan) => <article className={`pricing-card${plan.slug === 'team' ? ' featured' : ''}`} key={plan.id}><p className="eyebrow">{plan.audience}</p><h2>{plan.name}</h2><p className="pricing-summary">{plan.summary}</p><p className="price-line"><strong>{formatPrice(plan.price_cents, plan.currency)}</strong>{plan.price_cents > 0 && <span> / month</span>}</p><ul>{plan.features.map((feature) => <li key={feature}><i aria-hidden="true">✓</i>{feature}</li>)}</ul><a className="button button-mint" href={`/checkout/${plan.slug}`}>{plan.is_demo ? 'Open demo' : 'Try simulated checkout'} <Arrow /></a><small className="plan-simulation">No real payment. Plan and price are drafts.</small></article>)}</div><p className="pricing-footnote">Prices are draft USD figures for concept review, not an offer or active subscription. A real product and commercial terms are not available through this demo.</p></section></main>;
@@ -267,7 +351,8 @@ function PortalScreen({ page, data }) {
             </>}
             {errors.agree && <p className="field-error">{errors.agree[0]}</p>}
             <label className="form-consent"><input name="agree" type="checkbox" value="1" required /><span>I understand this is a no-charge simulation and does not create a paid subscription. Read the <a href="/terms">Terms of Use</a> and <a href="/privacy">Privacy Policy</a>.</span></label>
-            <button className="button button-mint" type="submit">{plan.is_demo ? 'Open the demo' : 'Complete simulated checkout'} <Arrow /></button>
+            <TurnstileField enabled={data.turnstileEnabled} siteKey={data.turnstileSiteKey} action="checkout" error={errors.turnstile?.[0]} onVerified={setCheckoutVerified} />
+            <button className="button button-mint" type="submit" disabled={!data.turnstileEnabled || !checkoutVerified}>{plan.is_demo ? 'Open the demo' : 'Complete simulated checkout'} <Arrow /></button>
             <a className="back-link" href="/pricing">← Back to draft plans</a>
         </form><aside className="order-summary"><p className="eyebrow">ORDER SUMMARY</p><h2>{plan.name}</h2><p>{plan.summary}</p><div className="summary-total"><span>Draft plan price</span><strong>{formatPrice(plan.price_cents, plan.currency)}{plan.price_cents > 0 && <small> / month</small>}</strong></div><p className="summary-disclaimer">This amount is illustrative. The simulation does not bill or authorize a payment method. No card information is stored beyond brand and last four digits.</p><a href="/privacy">Read the privacy policy</a></aside></section></main>;
     }

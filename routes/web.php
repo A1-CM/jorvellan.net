@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/pricing', [PortalController::class, 'pricing'])->name('pricing');
 Route::get('/checkout/complete/{reference}', [PortalController::class, 'complete'])->name('checkout.complete');
 Route::get('/checkout/{slug}', [PortalController::class, 'checkout'])->name('checkout.show');
-Route::post('/checkout/{slug}', [PortalController::class, 'subscribe'])->name('checkout.subscribe');
+Route::post('/checkout/{slug}', [PortalController::class, 'subscribe'])->middleware('throttle:5,10')->name('checkout.subscribe');
 Route::get('/dashboard/demo', [PortalController::class, 'dashboard'])->name('dashboard.demo');
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,10')->name('contact.submit');
 
