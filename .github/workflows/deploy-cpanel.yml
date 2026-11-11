@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: A1-CM/.github
-          ref: v1.0.8
+          ref: v1.0.9
           path: toolkit
       - name: Set up PHP 8.5.12
         uses: shivammathur/setup-php@v2
@@ -95,5 +95,6 @@ jobs:
           MAIL_HOST: ${{ vars.MAIL_HOST }}
           MAIL_PORT: ${{ vars.MAIL_PORT }}
           MAIL_SCHEME: ${{ vars.MAIL_SCHEME }}
+          MAIL_MAILER: smtp
           APP_ENV_EXTRA: ${{ secrets.APP_ENV_EXTRA }}
         run: python3 toolkit/scripts/deploy_cpanel.py

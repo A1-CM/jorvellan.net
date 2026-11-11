@@ -11,6 +11,6 @@
         @vite(['resources/css/app.css', 'resources/js/app.jsx'])
     </head>
     <body>
-        <div id="app" data-page="{{ $page ?? 'home' }}"></div>
+        <div id="app" data-page="{{ $page ?? 'home' }}" data-props="{{ json_encode($portalData ?? [], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) }}"></div>
     </body>
 </html>

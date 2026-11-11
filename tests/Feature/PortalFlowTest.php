@@ -1,0 +1,116 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Mail\ContactSubmissionReceived;
+use App\Models\ContactSubmission;
+use App\Models\Plan;
+use App\Models\SimulatedPayment;
+use App\Models\Subscription;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
+use Tests\TestCase;
+
+class PortalFlowTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_pricing_and_dashboard_use_seeded_database_records(): void
+    {
+        $pricingResponse = $this->get(route('pricing'));
+
+        $pricingResponse->assertOk()
+            ->assertSee('Team')
+            ->assertSee('&quot;price_cents&quot;:4900', false);
+
+        $dashboardResponse = $this->get(route('dashboard.demo'));
+
+        $dashboardResponse->assertOk()
+            ->assertSee('Customer onboarding')
+            ->assertSee('Approval queue has variable wait time')
+            ->assertSee('Review close calendar dependencies')
+            ->assertSee('&quot;processes&quot;:8', false);
+
+        $this->assertSame(3, Plan::query()->count());
+    }
+
+    public function test_valid_test_card_completes_a_no_charge_checkout_and_saves_only_card_metadata(): void
+    {
+        $response = $this->post(route('checkout.subscribe', ['slug' => 'team']), [
+            'customer_name' => 'Riya Fernando',
+            'customer_email' => 'riya@example.com',
+            'company' => 'Example Operations',
+            'card_number' => '4242 4242 4242 4242',
+            'card_expiry' => '12/30',
+            'card_cvc' => '123',
+            'agree' => '1',
+        ]);
+
+        $subscription = Subscription::query()->sole();
+        $payment = SimulatedPayment::query()->sole();
+
+        $response->assertRedirect(route('checkout.complete', ['reference' => $subscription->reference]))
+            ->assertSessionHasNoErrors()
+            ->assertSessionMissingInput('card_number')
+            ->assertSessionMissingInput('card_expiry')
+            ->assertSessionMissingInput('card_cvc');
+        $this->assertSame('active', $subscription->status);
+        $this->assertTrue($subscription->is_simulated);
+        $this->assertSame('simulated_success', $payment->status);
+        $this->assertSame(4900, $payment->amount_cents);
+        $this->assertSame('Visa', $payment->card_brand);
+        $this->assertSame('4242', $payment->card_last_four);
+        $this->assertArrayNotHasKey('card_number', $payment->getAttributes());
+        $this->assertArrayNotHasKey('card_expiry', $payment->getAttributes());
+        $this->assertArrayNotHasKey('card_cvc', $payment->getAttributes());
+    }
+
+    public function test_invalid_card_number_is_rejected_without_creating_a_checkout_record(): void
+    {
+        $response = $this->from(route('checkout.show', ['slug' => 'team']))
+            ->post(route('checkout.subscribe', ['slug' => 'team']), [
+                'customer_name' => 'Riya Fernando',
+                'customer_email' => 'riya@example.com',
+                'card_number' => '4242 4242 4242 4241',
+                'card_expiry' => '12/30',
+                'card_cvc' => '123',
+                'agree' => '1',
+            ]);
+
+        $response->assertRedirect(route('checkout.show', ['slug' => 'team']))
+            ->assertSessionHasErrors(['card_number'])
+            ->assertSessionMissingInput('card_number')
+            ->assertSessionMissingInput('card_expiry')
+            ->assertSessionMissingInput('card_cvc');
+        $this->assertSame(0, Subscription::query()->count());
+        $this->assertSame(0, SimulatedPayment::query()->count());
+    }
+
+    public function test_contact_form_saves_the_inquiry_and_sends_a_quoted_support_email(): void
+    {
+        Mail::fake([ContactSubmissionReceived::class]);
+        $unsafeMessage = "Please review our process. <script>alert('x')</script>";
+
+        $response = $this->post(route('contact.submit'), [
+            'name' => 'Jordan Lee',
+            'email' => 'jordan@example.com',
+            'company' => 'Example Operations',
+            'phone' => '+1 415 555 0199',
+            'subject' => 'Workflow discovery',
+            'message' => $unsafeMessage,
+            'privacy_acknowledged' => '1',
+        ]);
+
+        $submission = ContactSubmission::query()->sole();
+        $response->assertRedirect()
+            ->assertSessionHas('contact_success', 'Thank you. Your message has been sent to Jorvellan Support.');
+        $this->assertSame($unsafeMessage, $submission->message);
+        Mail::assertSent(ContactSubmissionReceived::class, function (ContactSubmissionReceived $mail): bool {
+            $mail->assertHasSubject('New Jorvellan website inquiry')
+                ->assertSeeInHtml('<script>')
+                ->assertDontSeeInHtml("<script>alert('x')</script>", false);
+
+            return $mail->hasTo('support@jorvellan.net');
+        });
+    }
+}
