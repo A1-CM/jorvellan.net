@@ -76,6 +76,12 @@ Continue the marketing site in these small, reviewable phases. Complete each pha
 
 **M2 status:** The Home page now leads with the operations problem of process context getting lost across teams, then moves through the challenge, annotated illustrative workspace, capabilities, human-reviewed workflow, company background and contact action. The production frontend build and Laravel route list pass; desktop/mobile browser inspection remains pending.
 
+**M3 status:** Product leads with the annotated concept workspace and keeps the proposed NVIDIA options in a clearly future-facing section. Features are grouped into three capability areas, and How it works presents a connected five-step, human-reviewed flow. The production frontend build and Laravel route list pass; desktop/mobile browser inspection remains pending.
+
+**M4 status:** About leads with Jorvellan's purpose and founder/company facts, with office details as supporting information. Contact provides tappable map addresses and direct phone links for both offices. The footer now identifies the two company locations without repeating the product pitch. The production frontend build and Laravel route list pass; desktop/mobile browser inspection remains pending.
+
+**M5 status:** The Terms and Privacy pages remain visibly marked as drafts. Their hosting, analytics, cookies, retention, processor, legal-entity, governing-law and privacy-request details still need Jorvellan confirmation. The current marketing copy continues to identify the product as a concept, label sample data and describe the NVIDIA options as proposed. Production build, Laravel route and internal-link review pass. Desktop/mobile browser inspection remains pending, so the site is not marked ready to publish.
+
 ### Phase 2: Authenticated application
 
 After the marketing pages are complete, build the application in this order:
@@ -124,4 +130,7 @@ Before moving to the next page:
 - M0 visual foundation: implemented; checked text color pairs exceed 4.5:1 and the focus ring exceeds 3:1 against light and dark surfaces. Browser-based desktop/mobile inspection remains pending.
 - M1 shared marketing shell: implemented; production frontend build and route list pass. Browser-based desktop/mobile inspection remains pending.
 - M2 Home story: implemented with a labeled illustrative workspace preview; production frontend build and route list pass. Browser-based desktop/mobile inspection remains pending.
+- M3 Product, Features and How it works: implemented with a concept-first Product page, grouped capability areas and connected workflow; production frontend build and route list pass. Browser-based desktop/mobile inspection remains pending.
+- M4 About and Contact: implemented with company/founder facts, map links and tap-to-call phone numbers for both offices. Footer copy now names the company locations. Production frontend build and route list pass; browser-based desktop/mobile inspection remains pending.
+- M5 release review: legal drafts, product claims, sample labels, navigation links and production build reviewed. Legal details await company confirmation and desktop/mobile browser inspection remains pending; do not treat the marketing site as ready to publish.
 - Authenticated application: not started.

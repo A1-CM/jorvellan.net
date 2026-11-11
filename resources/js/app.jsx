@@ -67,18 +67,93 @@ function DashboardPreview() {
     );
 }
 
+function WorkspaceAnnotations() {
+    return <div className="preview-annotation-bar" aria-label="Workspace areas illustrated in the sample">
+        <span><i>01</i><b>Process context</b><small>Owner · version</small></span>
+        <span><i>02</i><b>Workflow movement</b><small>Stages · handoffs</small></span>
+        <span><i>03</i><b>Reviewed improvement</b><small>Observations · actions</small></span>
+    </div>;
+}
+
+const featureGroups = [
+    {
+        number: '01',
+        label: 'DOCUMENT + MAP',
+        title: 'Establish a shared process view.',
+        intro: 'Give teams a consistent starting point for understanding responsibilities and how work moves.',
+        items: [
+            ['Process registry', 'Record owner, department, category, status, version and review date so teams can find the right process definition.'],
+            ['Workflow maps', 'Describe stages, tasks, dependencies, expected durations and owners to make handoffs easier to follow.'],
+        ],
+    },
+    {
+        number: '02',
+        label: 'OBSERVE + PRIORITIZE',
+        title: 'Make recorded issues easier to discuss.',
+        intro: 'Bring manually entered observations and improvement work into a useful operational view.',
+        items: [
+            ['Performance observations', 'Add duration, completion or recurring issue notes with the process context attached.'],
+            ['Bottlenecks and improvements', 'Track a potential cause, its priority, an owner, target date, status and outcome.'],
+            ['Operations dashboard', 'Review process summaries, delayed stages and pending work from one overview.'],
+        ],
+    },
+    {
+        number: '03',
+        label: 'REVIEW + FOLLOW THROUGH',
+        title: 'Keep decisions with the people responsible.',
+        intro: 'Make suggested insights reviewable and leave a useful trail as the team follows up.',
+        items: [
+            ['Insight review', 'Let a person assess and decide whether a suggested observation belongs in the process record.'],
+            ['Search and filters', 'Find process and workflow records by their recorded details.'],
+            ['Activity history', 'See a record of process and improvement changes for teams to review.'],
+        ],
+    },
+];
+
+const workflowSteps = [
+    ['01', 'Document', 'Capture the process purpose, owner, department and current version.'],
+    ['02', 'Map', 'Describe stages, tasks, dependencies, expected duration and handoffs.'],
+    ['03', 'Observe', 'Add available performance notes and recurring issues using recorded information.'],
+    ['04', 'Review together', 'People assess observations and potential insights before acting on them.'],
+    ['05', 'Track improvement', 'Assign an owner and status, then record the outcome or what the team learned.'],
+];
+
 const marketingPages = {
-    product: { eyebrow: 'THE JORVELLAN WORKSPACE', title: <>A clearer view of<br />how operations work.</>, intro: 'Bring process records, workflow stages, observations and improvement actions together in one structured workspace.', action: 'Explore features', actionHref: '/features' },
-    features: { eyebrow: 'CAPABILITIES', title: <>The details behind<br />better operations.</>, intro: 'A connected set of records helps teams understand process ownership, workflow movement and improvement activity.' },
-    about: { eyebrow: 'ABOUT JORVELLAN', title: <>Make complex work<br />easier to understand.</>, intro: 'Jorvellan is focused on helping enterprise operations teams document how work moves and coordinate thoughtful process improvement.' },
-    contact: { eyebrow: 'CONTACT', title: <>Start a conversation<br />about your operations.</>, intro: 'Tell us what your teams are trying to make clearer. Reach Jorvellan at either of our listed offices.' },
-    'how-it-works': { eyebrow: 'A PRACTICAL IMPROVEMENT LOOP', title: <>From process knowledge<br />to considered action.</>, intro: 'Jorvellan organizes a repeatable way to document, map, review and improve business processes.' },
+    product: { eyebrow: 'THE JORVELLAN WORKSPACE', title: <>A clearer view of<br />work in motion.</>, intro: 'Bring process records, workflow stages, observations and improvement actions together in one structured workspace.', action: 'Explore features', actionHref: '/features' },
+    features: { eyebrow: 'CAPABILITIES', title: <>Connected capabilities<br />for process improvement.</>, intro: 'See how process records, manually recorded observations and human review can support a clearer improvement workflow.' },
+    about: { eyebrow: 'ABOUT JORVELLAN', title: <>Process clarity<br />starts with people.</>, intro: 'Jorvellan exists to help enterprise operations teams make process knowledge easier to understand, review and improve.' },
+    contact: { eyebrow: 'CONTACT', title: <>Start a conversation<br />about your operations.</>, intro: 'Choose the office closest to your team and call directly to discuss process discovery and workflow improvement.' },
+    'how-it-works': { eyebrow: 'A PEOPLE-LED IMPROVEMENT FLOW', title: <>From process record<br />to tracked improvement.</>, intro: 'Move from documenting and mapping work to recording observations, reviewing them together and tracking what changes.' },
     terms: { eyebrow: 'WEBSITE TERMS', title: <>Terms of use</>, intro: 'These draft terms describe the intended use of the Jorvellan website and its informational materials.' },
     privacy: { eyebrow: 'YOUR INFORMATION', title: <>Privacy policy</>, intro: 'This draft explains the intended handling of information when you visit the Jorvellan marketing website or contact the company.' },
 };
 
 function AddressCards() {
-    return <div className="address-grid"><article className="info-card"><p className="eyebrow">SRI LANKA</p><h3>Jorvellan (Pvt) Ltd</h3><p>3rd Floor, No. 186, Nawala Road<br />Nawala, Sri Jayawardenepura Kotte<br />Sri Lanka</p><a href="tel:+94112346789">+94 11 234 6789 <Arrow /></a></article><article className="info-card"><p className="eyebrow">UNITED STATES</p><h3>Jorvellan Inc</h3><p>Suite 520, 5th Floor<br />680 Folsom Street<br />San Francisco, CA 94107</p><a href="tel:+14155550148">+1 415-555-0148 <Arrow /></a></article></div>;
+    const offices = [
+        {
+            country: 'Sri Lanka',
+            company: 'Jorvellan (Pvt) Ltd',
+            address: <>3rd Floor, No. 186, Nawala Road<br />Nawala, Sri Jayawardenepura Kotte<br />Sri Lanka</>,
+            mapUrl: 'https://www.google.com/maps/search/?api=1&query=3rd+Floor%2C+No.+186%2C+Nawala+Road%2C+Nawala%2C+Sri+Jayawardenepura+Kotte%2C+Sri+Lanka',
+            phone: '+94 11 234 6789',
+            phoneUrl: 'tel:+94112346789',
+        },
+        {
+            country: 'United States',
+            company: 'Jorvellan Inc',
+            address: <>Suite 520, 5th Floor<br />680 Folsom Street<br />San Francisco, CA 94107</>,
+            mapUrl: 'https://www.google.com/maps/search/?api=1&query=Suite+520%2C+5th+Floor%2C+680+Folsom+Street%2C+San+Francisco%2C+CA+94107',
+            phone: '+1 415-555-0148',
+            phoneUrl: 'tel:+14155550148',
+        },
+    ];
+
+    return <div className="address-grid">{offices.map((office) => <article className="info-card office-card" key={office.country}>
+        <p className="eyebrow">{office.country.toUpperCase()} OFFICE</p>
+        <h3>{office.company}</h3>
+        <a className="office-address" href={office.mapUrl} target="_blank" rel="noreferrer" aria-label={`Open ${office.country} office address in Google Maps`}><span>{office.address}</span><small>Open in Google Maps <span aria-hidden="true">↗</span></small></a>
+        <a className="office-phone" href={office.phoneUrl} aria-label={`Call ${office.country} office at ${office.phone}`}>{office.phone}<Arrow /></a>
+    </article>)}</div>;
 }
 
 function MarketingPage({ page }) {
@@ -95,13 +170,22 @@ function MarketingPage({ page }) {
             {page === 'features' && <div className="hero-capability-list"><span><i>01</i> Process registry</span><span><i>02</i> Workflow maps</span><span><i>03</i> Insight review</span></div>}
             {page === 'about' && <div className="hero-founder-mark"><span>J</span><small>FOUNDED<br /><b>21 AUG 2023</b></small></div>}
             {page === 'contact' && <div className="hero-office-list"><span><i>SL</i><b>Sri Lanka<small>Colombo office</small></b></span><span><i>US</i><b>United States<small>San Francisco office</small></b></span></div>}
-            {page === 'how-it-works' && <ol className="hero-flow-list"><li>Document</li><li>Map</li><li>Review</li><li>Improve</li></ol>}
+            {page === 'how-it-works' && <ol className="hero-flow-list"><li>Document</li><li>Map</li><li>Observe</li><li>Review</li><li>Improve</li></ol>}
         </div></div></section>
-        {page === 'product' && <><section className="section-space"><div className="site-container"><SectionHeading eyebrow="A PRODUCT CONCEPT" title="One operational picture, built from reviewable records." text="Jorvellan is being shaped around the records teams need to understand process ownership, how work moves and where improvement efforts stand."/><div className="product-showcase"><DashboardPreview /></div><div className="detail-grid"><article className="info-card"><span>01 / UNDERSTAND</span><h3>Process registry</h3><p>Keep owners, departments, versions, categories and review dates together.</p></article><article className="info-card"><span>02 / CONNECT</span><h3>Workflow context</h3><p>Describe stages, tasks, dependencies and handoffs across teams.</p></article><article className="info-card"><span>03 / IMPROVE</span><h3>Reviewable actions</h3><p>Record observations, improvement opportunities and human-reviewed insights.</p></article></div></div></section><section className="tech-section section-space"><div className="site-container"><SectionHeading eyebrow="PROPOSED TECHNICAL DIRECTION" title="An architecture to explore as the product evolves." text="These are options for future research and design, not current integrations or product capabilities."/><div className="tech-grid">{[['NVIDIA NeMo','Potential model development and evaluation tooling.'],['NVIDIA NIM','A possible approach to serving models in a future architecture.'],['NVIDIA RAPIDS','Potential GPU-accelerated data exploration components.'],['NVIDIA Triton','A possible inference-serving option to evaluate.']].map(([name,desc])=><article className="tech-card" key={name}><small>PROPOSED OPTION</small><h3>{name}</h3><p>{desc}</p></article>)}</div><p className="scope-note">No NVIDIA integration, certification, endorsement, live AI inference or automated workflow execution is represented as available.</p></div></section></>}
-        {page === 'features' && <section className="section-space"><div className="site-container"><div className="detail-grid feature-detail-grid">{[['Process registry','Organize process owners, departments, categories, status, versions and review dates.'],['Workflow maps','Describe stages, tasks, dependencies, expected durations and responsible owners.'],['Performance observations','Keep manually recorded duration, completion and recurring issue observations with their context.'],['Bottlenecks and improvements','Track potential causes, priority, owners, target dates, status and outcomes.'],['Insight review','Keep suggested observations reviewable, with a human decision before adoption.'],['Operations dashboard','Bring process summaries, delayed stages and pending work into an overview.'],['Search and filters','Find process and workflow records by their recorded details.'],['Activity history','Retain a record of process and improvement changes for teams to review.']].map(([title,desc],i)=><article className="info-card feature-detail" key={title}><span>0{i+1}</span><h3>{title}</h3><p>{desc}</p></article>)}</div><p className="scope-note">This is a product concept. Live process mining, system integrations, automated monitoring, live AI inference and automatic workflow execution are not included in the initial scope.</p></div></section>}
-        {page === 'how-it-works' && <section className="section-space"><div className="site-container"><div className="process-steps">{[['01','Document','Create a process record with its owner, purpose, department and version.'],['02','Map','Describe the stages, tasks, dependencies and handoffs involved.'],['03','Observe','Add performance notes and record delays or recurring issues using available information.'],['04','Review','Assess potential insights and improvement opportunities with the people responsible.'],['05','Improve','Assign actions, track their status and record what changed or was learned.']].map(([number,title,desc])=><article key={number}><i>{number}</i><div><h3>{title}</h3><p>{desc}</p></div></article>)}</div><p className="scope-note">The initial concept uses information entered by people or prepared as sample data. It does not connect to enterprise systems or automatically monitor or change live workflows.</p></div></section>}
-        {page === 'about' && <section className="section-space"><div className="site-container about-detail"><div><SectionHeading eyebrow="OUR FOCUS" title="Help teams see the work behind the work." text="Jorvellan is building toward a structured operational workspace where process knowledge, workflow details and improvement decisions can stay connected."/><p className="page-lede">The goal is to give operations teams and process improvement practitioners a shared, reviewable place to understand processes and coordinate change.</p></div><div className="about-facts"><div><small>FOUNDER</small><strong>Aadhirayan Thamilini</strong></div><div><small>FOUNDED</small><strong>21 August 2023</strong></div><div><small>COMPANY</small><strong>Jorvellan (Pvt) Ltd · Sri Lanka<br/>Jorvellan Inc · United States</strong></div></div></div><div className="site-container"><AddressCards /></div></section>}
-        {page === 'contact' && <section className="section-space"><div className="site-container"><p className="page-lede contact-lede">Reach us by phone to discuss process discovery, workflow visibility or enterprise operations improvement.</p><AddressCards /><div className="contact-followup"><h2>What would you like to make clearer?</h2><p>Our team welcomes conversations about process documentation, handoffs, bottlenecks and improvement priorities. Call either office above to get started.</p></div></div></section>}
+        {page === 'product' && <>
+            <section className="section-space product-concept-section"><div className="site-container">
+                <SectionHeading eyebrow="PRODUCT CONCEPT · ILLUSTRATIVE SAMPLE DATA" title="One workspace for the records behind a process." text="This proposed workspace shows how ownership, workflow stages, observations and improvement actions could be reviewed together. Every record and figure in the preview is illustrative." />
+                <WorkspaceAnnotations />
+                <div className="preview-caption"><span><i /> PRODUCT CONCEPT PREVIEW · SAMPLE DATA</span><span>Explore the sample workspace tabs</span></div>
+                <div className="product-showcase"><DashboardPreview /></div>
+                <div className="detail-grid product-records"><article className="info-card"><span>01 / UNDERSTAND</span><h3>Process context</h3><p>Keep ownership, departments and versions attached to the process definition.</p></article><article className="info-card"><span>02 / CONNECT</span><h3>Workflow movement</h3><p>Describe stages, tasks, dependencies and handoffs across teams.</p></article><article className="info-card"><span>03 / IMPROVE</span><h3>Human-reviewed actions</h3><p>Record observations and improvement opportunities with accountable owners.</p></article></div>
+            </div></section>
+            <section className="tech-section section-space"><div className="site-container"><SectionHeading eyebrow="PROPOSED · FUTURE-FACING TECHNICAL DIRECTION" title="Possible tools for a later product phase." text="These options are subjects for future research. They are not current integrations or capabilities in the Jorvellan concept." /><div className="tech-grid">{[['NVIDIA NeMo','A potential option for future model development and evaluation.'],['NVIDIA NIM','A possible model-serving approach to assess in a later architecture.'],['NVIDIA RAPIDS','Potential components for future accelerated data exploration.'],['NVIDIA Triton','A possible inference-serving option to evaluate in a future phase.']].map(([name,desc])=><article className="tech-card" key={name}><small>PROPOSED OPTION · NOT INTEGRATED</small><h3>{name}</h3><p>{desc}</p></article>)}</div><p className="scope-note">Jorvellan does not currently represent any NVIDIA integration, certification or endorsement, live AI inference, or automated workflow execution.</p></div></section>
+        </>}
+        {page === 'features' && <section className="section-space feature-groups-section"><div className="site-container"><div className="feature-group-grid">{featureGroups.map((group) => <article className="feature-group" key={group.number}><div className="feature-group-heading"><span>{group.number}</span><p className="eyebrow">{group.label}</p><h2>{group.title}</h2><p className="feature-group-intro">{group.intro}</p></div><ul>{group.items.map(([title, description]) => <li key={title}><h3>{title}</h3><p>{description}</p></li>)}</ul></article>)}</div><p className="scope-note">Jorvellan is a product concept. Records and observations are entered or prepared as sample data; live process mining, integrations, automatic monitoring, live AI inference and automatic workflow execution are not included.</p></div></section>}
+        {page === 'how-it-works' && <section className="section-space workflow-section"><div className="site-container"><SectionHeading eyebrow="A CONNECTED, PEOPLE-LED FLOW" title="Each step gives the next one useful context." text="Start from documented process information, add a clear map and observations, then let the people responsible review potential improvements and track follow-through."/><ol className="workflow-flow">{workflowSteps.map(([number, title, description]) => <li key={number}><span className="workflow-step-number">{number}</span><div><h3>{title}</h3><p>{description}</p></div></li>)}</ol><p className="scope-note">The initial concept uses information entered by people or prepared as sample data. It does not connect to enterprise systems or automatically monitor live workflows. Any suggested insight requires human review.</p></div></section>}
+        {page === 'about' && <section className="section-space about-purpose-section"><div className="site-container about-detail"><div className="about-purpose"><SectionHeading eyebrow="OUR PURPOSE" title="Help teams understand how work moves, then improve it together." text="Jorvellan focuses on making process knowledge easier to document, connect and review, so operations teams can discuss changes with a shared understanding."/><p className="about-founder">Founded by <strong>Aadhirayan Thamilini</strong></p><p className="about-origin">Jorvellan was founded on 21 August 2023, with company entities in Sri Lanka and the United States.</p></div><div className="about-facts"><div><small>FOUNDED</small><strong>21 August 2023</strong></div><div><small>SRI LANKA ENTITY</small><strong>Jorvellan (Pvt) Ltd</strong></div><div><small>UNITED STATES ENTITY</small><strong>Jorvellan Inc</strong></div></div></div><div className="site-container about-offices"><SectionHeading eyebrow="OUR LOCATIONS" title="Two offices, one shared purpose." text="Reach the office nearest to your team for a conversation about Jorvellan."/><AddressCards /></div></section>}
+        {page === 'contact' && <section className="section-space"><div className="site-container"><p className="page-lede contact-lede">Choose a location below to open the address in a map or call the office directly.</p><AddressCards /><div className="contact-followup"><h2>A useful starting point</h2><p>You can share the process you want to understand, which teams are involved, and what you hope to improve. The conversation can start with the context you already have.</p></div></div></section>}
         <section className="page-cta"><div className="site-container"><div><p className="eyebrow eyebrow-light">JORVELLAN · ENTERPRISE OPERATIONS</p><h2>Make the next improvement easier to see.</h2></div><a className="button button-mint" href="/contact">Talk with Jorvellan <Arrow /></a></div></section>
     </main>;
 }
@@ -196,11 +280,7 @@ function App() {
                             <SectionHeading eyebrow="INTRODUCING JORVELLAN" title={<>One reviewable workspace<br />for how work moves.</>} text="Connect process ownership to workflow stages, performance observations and improvement actions. The sample below illustrates the product concept; it contains no live enterprise data." />
                             <a className="inline-link" href="/product">Explore the product <Arrow /></a>
                         </div>
-                        <div className="preview-annotation-bar" aria-label="Workspace areas illustrated in the sample">
-                            <span><i>01</i><b>Process context</b><small>Owner · version</small></span>
-                            <span><i>02</i><b>Workflow movement</b><small>Stages · handoffs</small></span>
-                            <span><i>03</i><b>Reviewed improvement</b><small>Observations · actions</small></span>
-                        </div>
+                        <WorkspaceAnnotations />
                         <div className="preview-caption"><span><i /> PRODUCT CONCEPT PREVIEW · ILLUSTRATIVE SAMPLE DATA</span><span>Explore the sample workspace tabs</span></div>
                         <DashboardPreview />
                     </div>
@@ -243,7 +323,7 @@ function App() {
 
             <footer className="site-footer">
                 <div className="site-container footer-top">
-                    <div className="footer-brand"><Brand light current={page === 'home'} /><p>AI process discovery & workflow intelligence<br />for enterprise operations.</p></div>
+                    <div className="footer-brand"><Brand light current={page === 'home'} /><p>Jorvellan (Pvt) Ltd · Sri Lanka<br />Jorvellan Inc · United States</p></div>
                     <div className="footer-link-group"><p>EXPLORE</p><nav aria-label="Product navigation"><a href="/product" aria-current={page === 'product' ? 'page' : undefined}>Product</a><a href="/features" aria-current={page === 'features' ? 'page' : undefined}>Features</a><a href="/how-it-works" aria-current={page === 'how-it-works' ? 'page' : undefined}>How it works</a></nav></div>
                     <div className="footer-link-group"><p>JORVELLAN</p><nav aria-label="Company navigation"><a href="/about" aria-current={page === 'about' ? 'page' : undefined}>About</a><a href="/contact" aria-current={page === 'contact' ? 'page' : undefined}>Contact</a></nav></div>
                     <div className="footer-link-group"><p>INFORMATION</p><nav className="legal-links" aria-label="Legal navigation"><a className={page === 'terms' ? 'is-current' : undefined} href="/terms" aria-current={page === 'terms' ? 'page' : undefined}>Terms</a><a className={page === 'privacy' ? 'is-current' : undefined} href="/privacy" aria-current={page === 'privacy' ? 'page' : undefined}>Privacy policy</a></nav></div>
