@@ -2,6 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../css/app.css';
 
+const COOKIE_CONSENT_STORAGE_KEY = 'jorvellan.cookie-consent.v1';
+
+function readCookieConsent() {
+    try {
+        const savedChoice = JSON.parse(window.localStorage.getItem(COOKIE_CONSENT_STORAGE_KEY) || 'null');
+        return ['all', 'essential'].includes(savedChoice?.choice) ? savedChoice.choice : null;
+    } catch {
+        return null;
+    }
+}
+
 const sampleProcesses = [
     { name: 'Customer onboarding', department: 'Customer operations', stages: 8, status: 'Needs review', tone: 'amber' },
     { name: 'Invoice to payment', department: 'Finance', stages: 6, status: 'Active', tone: 'green' },
@@ -192,18 +203,18 @@ function MarketingPage({ page, portalData = {} }) {
                 <h2>5. Permitted use</h2><p>You may use the public website for lawful informational and business purposes. You agree not to misuse the site, probe or bypass access controls, disrupt service, introduce malicious code, scrape or overload the service, misrepresent sample information as real, or infringe another person’s rights.</p>
                 <h2>6. Intellectual property</h2><p>Unless identified otherwise, Jorvellan owns or is authorized to use the website text, brand marks, layout and original visual materials. You may view the website and share links to it. No ownership transfer or broader licence is granted. Third-party names and marks remain the property of their owners; their mention does not imply affiliation or endorsement.</p>
                 <h2>7. Availability and changes</h2><p>We may update, suspend or remove website pages or the demo. We aim to keep materials useful but do not promise that they will always be complete, current, uninterrupted, or error-free. We may revise these terms by publishing an updated version and date on this page.</p>
-                <h2>8. No professional advice or service commitment</h2><p>Website content is general information, not legal, financial, security, operational or other professional advice. Teams should independently validate process information and obtain appropriate advice before making decisions. The demo and product descriptions do not create a service-level commitment, implementation obligation, warranty, or customer relationship.</p>
+                <h2>8. No professional advice or service commitment</h2><p>Website content and replies from the AI website assistant are general information that may be incomplete or inaccurate, not legal, financial, security, operational or other professional advice. Teams should independently validate process information and obtain appropriate advice before making decisions. The demo and product descriptions do not create a service-level commitment, implementation obligation, warranty, or customer relationship.</p>
                 <h2>9. Third-party websites</h2><p>The site may link to third-party websites, including map services. Those services are operated by others and are governed by their own terms and privacy practices. Jorvellan does not control or endorse all content on linked sites.</p>
                 <h2>10. Responsibility and governing law</h2><p>To the extent permitted by applicable law, Jorvellan is not responsible for indirect or consequential loss arising from use of this informational website or its sample data. Nothing in these terms limits liability that cannot legally be limited or excludes rights that cannot be excluded. The governing law and contracting entity for any future paid service will be stated in separate service terms. These website terms do not choose a governing law for a future customer agreement.</p>
                 <h2>11. Contact</h2><p>Questions about these terms: <a href="mailto:support@jorvellan.net">support@jorvellan.net</a>. Sri Lanka: Jorvellan (Pvt) Ltd, 3rd Floor, No. 186, Nawala Road, Nawala, Sri Jayawardenepura Kotte, Sri Lanka; +94 11 234 6789. United States: Jorvellan Inc., Suite 520, 5th Floor, 680 Folsom Street, San Francisco, CA 94107, USA; +1 415-555-0148.</p>
             </> : <>
                 <h2>1. About this policy</h2><p>This policy describes information handled through jorvellan.net, its contact form, and its simulated checkout. It does not describe a future production SaaS service, which will need a separate product privacy notice before real customer or workflow data is collected.</p>
                 <h2>2. Who is responsible</h2><p>Jorvellan operates through Jorvellan (Pvt) Ltd in Sri Lanka and Jorvellan Inc. in the United States. The relevant Jorvellan entity handles website inquiries and coordinates a response. For questions about the entity responsible for a particular interaction, contact <a href="mailto:support@jorvellan.net">support@jorvellan.net</a>.</p>
-                <h2>3. Information you provide</h2><p>The contact form asks for your name, email address and message; company, phone and subject are optional. If you choose a plan in the simulated checkout, we collect your name, email and company if provided, and create a simulated subscription record. Do not submit confidential or sensitive personal information in a message.</p>
+                <h2>3. Information you provide</h2><p>The contact form asks for your name, email address and message; company, phone and subject are optional. If you choose a plan in the simulated checkout, we collect your name, email and company if provided, and create a simulated subscription record. If you use the AI website assistant, the messages and recent conversation you send are transmitted to Groq to generate replies. Chat history stays in the current page and is not saved to a Jorvellan database. Do not submit confidential or sensitive information in a message or chat.</p>
                 <h2>4. Simulated card information</h2><p>Paid-plan demo checkout asks for a card number, expiry date and security code only to validate the format and demonstrate a successful flow. No payment processor or bank is contacted and no charge or authorization occurs. The application records only a simulated status, amount, card brand and last four digits. The full card number, expiry date and security code are not saved in the application database or session. Use the provided 4242 test card pattern or another Luhn-valid test number; do not enter a real card.</p>
                 <h2>5. How we use information</h2><p>We use contact details and message content to respond to your inquiry, route it to the support team, maintain an inquiry record and protect the website. Simulated checkout information is used to display the demo confirmation and understand aggregate interest in draft plans. Cloudflare Turnstile may process technical and browser signals when you open a page with a protected form and complete the security check to help distinguish people from automated traffic. We do not use the demo to make automated decisions about you.</p>
-                <h2>6. Cookies, logs and security</h2><p>The site uses the session and security mechanisms needed for navigation, form protection, validation feedback and the simulated checkout confirmation. The web host and application may process technical request data, such as IP address, browser details, timestamps and error records, to deliver and secure the site. Cloudflare provides Turnstile verification under its own privacy terms; see <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noreferrer">Cloudflare’s Privacy Policy</a>. No advertising or analytics tools are intentionally included in this site build. Your browser may also store ordinary functional cookies.</p>
-                <h2>7. Email and service providers</h2><p>Contact messages are stored in the application database and sent to support@jorvellan.net through the configured email service. Website hosting, infrastructure and email providers may process information on Jorvellan’s behalf to operate the site. Their identities, locations and applicable safeguards depend on the production providers selected by Jorvellan.</p>
+                <h2>6. Cookies, logs and security</h2><p>The site uses the session and security mechanisms needed for navigation, form protection, validation feedback and the simulated checkout confirmation. Your browser stores your cookie choice locally so you can change it later. The web host and application may process technical request data, such as IP address, browser details, timestamps and error records, to deliver and secure the site. Cloudflare provides Turnstile verification under its own privacy terms; see <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noreferrer">Cloudflare’s Privacy Policy</a>. No analytics or advertising cookies are currently enabled.</p>
+                <h2>7. Email and AI service providers</h2><p>Contact messages are stored in the application database and sent to support@jorvellan.net through the configured email service. Chat questions and recent conversation context are sent to Groq to generate replies; Jorvellan does not intentionally store chat transcripts. Groq says inference requests are not retained by default but may be temporarily logged for service reliability or abuse investigation. See <a href="https://console.groq.com/docs/your-data" target="_blank" rel="noreferrer">Groq’s API data controls</a> and <a href="https://groq.com/privacy-policy" target="_blank" rel="noreferrer">Privacy Policy</a> for current provider practices. Hosting, infrastructure and email providers may also process information on Jorvellan’s behalf to operate the site.</p>
                 <h2>8. Retention</h2><p>Contact and simulated checkout records are kept in the application database. They should be retained only as long as needed to handle the inquiry, operate the demo, maintain business records, protect the service, or meet legal obligations. A fixed deletion schedule has not been set for this demo, so contact support for a record-specific request.</p>
                 <h2>9. International handling</h2><p>Jorvellan has offices in Sri Lanka and the United States. Depending on the hosting and email configuration, information may be handled in either country or in other locations used by service providers. Contact us for details relevant to a particular inquiry.</p>
                 <h2>10. Your choices and requests</h2><p>You may contact us to ask about, correct or request deletion of information you submitted. Applicable rights and response timelines vary by location and law. We may need to verify your request and retain limited records when required or permitted by law. Send requests to <a href="mailto:support@jorvellan.net">support@jorvellan.net</a> or use the <a href="/contact">contact form</a>.</p>
@@ -383,14 +394,135 @@ function ActionList({ actions, detailed = false }) {
     return <div className="record-list">{actions.map((action) => <article className="record-item action-item" key={action.title}><span className={`action-state ${action.status.toLowerCase().replaceAll(' ', '-')}`}>{action.status}</span><div><h4>{action.title}</h4><p>{action.process} · {action.owner} · Due {action.due_on}</p>{detailed && <><p className="record-detail">{action.description}</p>{action.outcome && <p className="action-outcome">Outcome recorded: {action.outcome}</p>}</>}</div><span className={`priority-pill ${action.priority.toLowerCase()}`}>{action.priority}</span></article>)}</div>;
 }
 
+function CookieConsentBanner({ choice, onSave }) {
+    if (choice) {
+        return null;
+    }
+
+    return <section className="cookie-consent" aria-labelledby="cookie-consent-title" aria-describedby="cookie-consent-description">
+        <div className="cookie-consent-copy">
+            <span className="cookie-consent-icon" aria-hidden="true">◉</span>
+            <div>
+                <h2 id="cookie-consent-title">Your privacy choices</h2>
+                <p id="cookie-consent-description">We use essential session and security storage. Analytics and advertising cookies are not currently enabled. Your choice is saved in this browser. <a href="/privacy">Privacy policy</a></p>
+            </div>
+        </div>
+        <div className="cookie-consent-actions">
+            <button className="cookie-button cookie-button-secondary" type="button" onClick={() => onSave('essential')}>Only necessary</button>
+            <button className="cookie-button cookie-button-primary" type="button" onClick={() => onSave('all')}>Accept all</button>
+        </div>
+    </section>;
+}
+
+function SiteChatWidget() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [messages, setMessages] = useState([
+        { role: 'assistant', content: 'Hi, I’m Jorvellan’s site assistant. Ask me about the product concept, features, demo, draft pricing, or how to contact us.' },
+    ]);
+    const [draft, setDraft] = useState('');
+    const [isSending, setIsSending] = useState(false);
+    const inputRef = useRef(null);
+    const messagesRef = useRef(null);
+
+    useEffect(() => {
+        if (isOpen) {
+            inputRef.current?.focus();
+            messagesRef.current?.scrollTo({ top: messagesRef.current.scrollHeight });
+        }
+    }, [isOpen, messages, isSending]);
+
+    useEffect(() => {
+        function closeOnEscape(event) {
+            if (event.key === 'Escape') {
+                setIsOpen(false);
+            }
+        }
+
+        document.addEventListener('keydown', closeOnEscape);
+        return () => document.removeEventListener('keydown', closeOnEscape);
+    }, []);
+
+    async function sendMessage(event) {
+        event.preventDefault();
+        const content = draft.trim();
+        if (!content || isSending) {
+            return;
+        }
+
+        const nextMessages = [...messages, { role: 'user', content }].slice(-8);
+        setMessages(nextMessages);
+        setDraft('');
+        setIsSending(true);
+
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                },
+                body: JSON.stringify({ messages: nextMessages }),
+            });
+            let result;
+            try {
+                result = await response.json();
+            } catch {
+                throw new Error('The assistant is temporarily unavailable. Please try again or contact Jorvellan Support.');
+            }
+            if (!response.ok || typeof result.reply !== 'string') {
+                throw new Error(result.message || 'The assistant could not answer right now.');
+            }
+
+            setMessages((currentMessages) => [...currentMessages, { role: 'assistant', content: result.reply }].slice(-8));
+        } catch (error) {
+            setMessages((currentMessages) => [...currentMessages, {
+                role: 'assistant',
+                content: error instanceof Error ? error.message : 'The assistant is temporarily unavailable. Please try again or contact Jorvellan Support.',
+            }].slice(-8));
+        } finally {
+            setIsSending(false);
+        }
+    }
+
+    return <>
+        {isOpen && <section id="site-chat-panel" className="site-chat-panel" aria-label="Jorvellan website assistant">
+            <header className="site-chat-header"><div><span className="site-chat-avatar" aria-hidden="true">J</span><span><strong>Jorvellan assistant</strong><small>Website guide · AI responses</small></span></div><button type="button" className="site-chat-close" onClick={() => setIsOpen(false)} aria-label="Close chat">×</button></header>
+            <div className="site-chat-messages" ref={messagesRef} aria-live="polite" aria-relevant="additions text">
+                {messages.map((message, index) => <p className={`site-chat-message ${message.role}`} key={`${message.role}-${index}`}>{message.content}</p>)}
+                {isSending && <p className="site-chat-message assistant site-chat-typing" role="status">Thinking…</p>}
+            </div>
+            <p className="site-chat-disclosure">AI answers may be incomplete. Messages are sent to Groq to generate replies. Please don’t share sensitive information.</p>
+            <form className="site-chat-form" onSubmit={sendMessage}>
+                <textarea ref={inputRef} value={draft} onChange={(event) => setDraft(event.target.value)} maxLength={1500} rows={2} placeholder="Ask about Jorvellan…" aria-label="Your message" required disabled={isSending} />
+                <button type="submit" disabled={!draft.trim() || isSending} aria-label="Send message">Send <span aria-hidden="true">↗</span></button>
+            </form>
+        </section>}
+        <button className={`site-chat-launcher${isOpen ? ' is-open' : ''}`} type="button" aria-expanded={isOpen} aria-controls="site-chat-panel" onClick={() => setIsOpen(!isOpen)}>
+            <span aria-hidden="true">{isOpen ? '×' : '✳'}</span>{isOpen ? 'Close' : 'Ask Jorvellan'}
+        </button>
+    </>;
+}
+
 function App() {
     const appRoot = document.getElementById('app');
     const page = appRoot?.dataset.page || 'home';
     const portalData = JSON.parse(appRoot?.dataset.props || '{}');
     const [menuOpen, setMenuOpen] = useState(false);
+    const [cookieChoice, setCookieChoice] = useState(readCookieConsent);
     const menuButtonRef = useRef(null);
     const headerRef = useRef(null);
     const closeMenu = () => setMenuOpen(false);
+    const saveCookieChoice = (choice) => {
+        try {
+            window.localStorage.setItem(COOKIE_CONSENT_STORAGE_KEY, JSON.stringify({ choice, savedAt: new Date().toISOString() }));
+        } catch {
+            // The banner still closes for this visit if browser storage is unavailable.
+        }
+        setCookieChoice(choice);
+    };
+    const reopenCookieSettings = () => setCookieChoice(null);
     const navigationItems = [
         { page: 'home', label: 'Home', href: '/' },
         { page: 'product', label: 'Product', href: page === 'home' ? '#product' : '/product' },
@@ -522,10 +654,12 @@ function App() {
                     <div className="footer-brand"><Brand light current={page === 'home'} /><p>Jorvellan (Pvt) Ltd · Sri Lanka<br />Jorvellan Inc. · United States<br /><a href="mailto:support@jorvellan.net">support@jorvellan.net</a></p></div>
                     <div className="footer-link-group"><p>EXPLORE</p><nav aria-label="Product navigation"><a href="/product" aria-current={page === 'product' ? 'page' : undefined}>Product</a><a href="/features" aria-current={page === 'features' ? 'page' : undefined}>Features</a><a href="/how-it-works" aria-current={page === 'how-it-works' ? 'page' : undefined}>How it works</a><a href="/pricing" aria-current={page === 'pricing' ? 'page' : undefined}>Draft pricing</a><a href="/dashboard/demo">Demo workspace</a></nav></div>
                     <div className="footer-link-group"><p>JORVELLAN</p><nav aria-label="Company navigation"><a href="/about" aria-current={page === 'about' ? 'page' : undefined}>About</a><a href="/contact" aria-current={page === 'contact' ? 'page' : undefined}>Contact</a></nav></div>
-                    <div className="footer-link-group"><p>INFORMATION</p><nav className="legal-links" aria-label="Legal navigation"><a className={page === 'terms' ? 'is-current' : undefined} href="/terms" aria-current={page === 'terms' ? 'page' : undefined}>Terms</a><a className={page === 'privacy' ? 'is-current' : undefined} href="/privacy" aria-current={page === 'privacy' ? 'page' : undefined}>Privacy policy</a></nav></div>
+                    <div className="footer-link-group"><p>INFORMATION</p><nav className="legal-links" aria-label="Legal navigation"><a className={page === 'terms' ? 'is-current' : undefined} href="/terms" aria-current={page === 'terms' ? 'page' : undefined}>Terms</a><a className={page === 'privacy' ? 'is-current' : undefined} href="/privacy" aria-current={page === 'privacy' ? 'page' : undefined}>Privacy policy</a><button className="footer-cookie-settings" type="button" onClick={reopenCookieSettings}>Cookie settings</button></nav></div>
                 </div>
                 <div className="site-container footer-bottom"><span>© 2026 Jorvellan</span><span>Proposed product concept · Sample data is illustrative</span><a href="#top">Back to top <span aria-hidden="true">↑</span></a></div>
             </footer>
+            <CookieConsentBanner choice={cookieChoice} onSave={saveCookieChoice} />
+            <SiteChatWidget />
         </div>
     );
 }

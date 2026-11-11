@@ -8,6 +8,7 @@ use App\Models\Plan;
 use App\Models\SimulatedPayment;
 use App\Models\Subscription;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
@@ -36,6 +37,15 @@ class PortalFlowTest extends TestCase
 
     public function test_valid_test_card_completes_a_no_charge_checkout_and_saves_only_card_metadata(): void
     {
+        Http::preventStrayRequests();
+        Http::fake([
+            'challenges.cloudflare.com/turnstile/v0/siteverify' => Http::response([
+                'success' => true,
+                'action' => 'checkout',
+                'hostname' => 'localhost',
+            ]),
+        ]);
+
         $response = $this->post(route('checkout.subscribe', ['slug' => 'team']), [
             'customer_name' => 'Riya Fernando',
             'customer_email' => 'riya@example.com',
@@ -43,8 +53,10 @@ class PortalFlowTest extends TestCase
             'card_number' => '4242 4242 4242 4242',
             'card_expiry' => '12/30',
             'card_cvc' => '123',
+            'cf-turnstile-response' => 'valid-checkout-token',
             'agree' => '1',
         ]);
+        $response->assertSessionHasNoErrors();
 
         $subscription = Subscription::query()->sole();
         $payment = SimulatedPayment::query()->sole();
@@ -89,6 +101,14 @@ class PortalFlowTest extends TestCase
     public function test_contact_form_saves_the_inquiry_and_sends_a_quoted_support_email(): void
     {
         Mail::fake([ContactSubmissionReceived::class]);
+        Http::preventStrayRequests();
+        Http::fake([
+            'challenges.cloudflare.com/turnstile/v0/siteverify' => Http::response([
+                'success' => true,
+                'action' => 'contact',
+                'hostname' => 'localhost',
+            ]),
+        ]);
         $unsafeMessage = "Please review our process. <script>alert('x')</script>";
 
         $response = $this->post(route('contact.submit'), [
@@ -98,8 +118,10 @@ class PortalFlowTest extends TestCase
             'phone' => '+1 415 555 0199',
             'subject' => 'Workflow discovery',
             'message' => $unsafeMessage,
+            'cf-turnstile-response' => 'valid-contact-token',
             'privacy_acknowledged' => '1',
         ]);
+        $response->assertSessionHasNoErrors();
 
         $submission = ContactSubmission::query()->sole();
         $response->assertRedirect()

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\PortalController;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,7 @@ Route::get('/checkout/{slug}', [PortalController::class, 'checkout'])->name('che
 Route::post('/checkout/{slug}', [PortalController::class, 'subscribe'])->middleware('throttle:5,10')->name('checkout.subscribe');
 Route::get('/dashboard/demo', [PortalController::class, 'dashboard'])->name('dashboard.demo');
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:5,10')->name('contact.submit');
+Route::post('/chat', [ChatController::class, 'store'])->middleware('throttle:10,1')->name('chat.store');
 
 Route::view('/', 'welcome', [
     'page' => 'home',

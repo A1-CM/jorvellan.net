@@ -40,4 +40,10 @@ return [
         'secret_key' => env('TURNSTILE_SECRET_KEY'),
     ],
 
+    'groq' => [
+        'api_token' => env('GROQ_API_TOKEN'),
+        'primary_model' => env('GROQ_PRIMARY_MODEL', 'openai/gpt-oss-120b'),
+        'fallback_model' => env('GROQ_FALLBACK_MODEL', 'openai/gpt-oss-20b'),
+    ],
+
 ];
