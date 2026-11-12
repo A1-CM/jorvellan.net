@@ -1019,3 +1019,46 @@ a:focus-visible, button:focus-visible {
     .legal-copy h2 { font-size: 18px; }
     .legal-copy p { font-size: 14px; }
 }
+
+/* Keep marketing hero art editorial and lightweight; office details stay on the Contact page. */
+.page-hero-contact .page-hero-grid { grid-template-columns: minmax(0, 1fr); }
+.page-hero-art-features,
+.page-hero-art-how-it-works {
+    width: min(100%, 500px);
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+}
+.hero-capability-list,
+.hero-flow-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 9px 0;
+}
+.hero-capability-list > span,
+.hero-flow-list > span {
+    min-height: 0;
+    padding: 0;
+    color: #d8d9ef;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 620;
+}
+.hero-capability-list > span:not(:last-child)::after,
+.hero-flow-list > span:not(:last-child)::after {
+    margin-inline: 11px;
+    color: #999ddb;
+    content: "·";
+}
+.hero-capability-list i { display: none; }
+
+@media (max-width: 700px) {
+    .hero-capability-list > span,
+    .hero-flow-list > span { font-size: 12px; }
+}

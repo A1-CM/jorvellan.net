@@ -225,13 +225,12 @@ function MarketingPage({ page, portalData = {} }) {
     }
 
     return <main className="marketing-page">
-        <section className={`page-hero page-hero-${page}`}><div className="site-container page-hero-grid"><div><p className="eyebrow">{content.eyebrow}</p><h1>{content.title}</h1><p className="page-lede">{content.intro}</p>{content.action && <a className="button button-mint" href={content.actionHref}>{content.action}<Arrow /></a>}</div><div className={`page-hero-art page-hero-art-${page}`} aria-hidden="true">
-            {page === 'product' && <><div className="page-art-orbit orbit-one"/><div className="page-art-orbit orbit-two"/><span>J</span><small>OPERATIONS<br />INTELLIGENCE</small><i>01</i><b>02</b></>}
-            {page === 'features' && <div className="hero-capability-list"><span><i>01</i> Process registry</span><span><i>02</i> Workflow maps</span><span><i>03</i> Insight review</span></div>}
+        <section className={`page-hero page-hero-${page}`}><div className="site-container page-hero-grid"><div><p className="eyebrow">{content.eyebrow}</p><h1>{content.title}</h1><p className="page-lede">{content.intro}</p>{content.action && <a className="button button-mint" href={content.actionHref}>{content.action}<Arrow /></a>}</div>{page !== 'contact' && <div className={`page-hero-art page-hero-art-${page}`} aria-hidden="true">
+            {page === 'product' && <><div className="page-art-orbit orbit-one"/><div className="page-art-orbit orbit-two"/><span>J</span><small>OPERATIONS<br />INTELLIGENCE</small></>}
+            {page === 'features' && <div className="hero-capability-list"><span>Process registry</span><span>Workflow maps</span><span>Insight review</span></div>}
             {page === 'about' && <div className="hero-founder-mark"><span>J</span><small>FOUNDED<br /><b>21 AUG 2023</b></small></div>}
-            {page === 'contact' && <div className="hero-office-list"><span><i>SL</i><b>Sri Lanka<small>Colombo office</small></b></span><span><i>US</i><b>United States<small>San Francisco office</small></b></span></div>}
-            {page === 'how-it-works' && <ol className="hero-flow-list"><li>Document</li><li>Map</li><li>Observe</li><li>Review</li><li>Improve</li></ol>}
-        </div></div></section>
+            {page === 'how-it-works' && <div className="hero-flow-list"><span>Document</span><span>Map</span><span>Observe</span><span>Review</span><span>Improve</span></div>}
+        </div>}</div></section>
         {page === 'product' && <>
             <section className="section-space product-concept-section"><div className="site-container">
                 <SectionHeading eyebrow="PRODUCT CONCEPT · ILLUSTRATIVE SAMPLE DATA" title="One workspace for the records behind a process." text="This proposed workspace shows how ownership, workflow stages, observations and improvement actions could be reviewed together. Every record and figure in the preview is illustrative." />
@@ -242,7 +241,7 @@ function MarketingPage({ page, portalData = {} }) {
                 <div className="product-demo-cta"><div><p className="eyebrow">DATABASE-BACKED SAMPLE</p><h2>Open the operations demo.</h2><p>Explore sample processes, workflow stages, review observations and improvement actions from a connected demo database.</p></div><a className="button button-mint" href="/dashboard/demo">Explore demo workspace <Arrow /></a></div>
                 <div className="product-pricing-link"><span>Evaluating a future plan?</span><a className="inline-link" href="/pricing">See draft pricing <Arrow /></a></div>
             </div></section>
-            <section className="tech-section section-space"><div className="site-container"><SectionHeading eyebrow="PROPOSED · FUTURE-FACING TECHNICAL DIRECTION" title="Possible tools for a later product phase." text="These options are subjects for future research. They are not current integrations or capabilities in the Jorvellan concept." /><div className="tech-grid">{[['NVIDIA NeMo','A potential option for future model development and evaluation.'],['NVIDIA NIM','A possible model-serving approach to assess in a later architecture.'],['NVIDIA RAPIDS','Potential components for future accelerated data exploration.'],['NVIDIA Triton','A possible inference-serving option to evaluate in a future phase.']].map(([name,desc])=><article className="tech-card" key={name}><small>PROPOSED OPTION · NOT INTEGRATED</small><h3>{name}</h3><p>{desc}</p></article>)}</div><p className="scope-note">Jorvellan does not currently represent any NVIDIA integration, certification or endorsement, live AI inference, or automated workflow execution.</p></div></section>
+            <section className="tech-section section-space"><div className="site-container"><SectionHeading eyebrow="PROPOSED PRODUCT STACK" title="AI process discovery for enterprise operations." text="A possible technical direction for a future phase, using NVIDIA NeMo, NIM, RAPIDS and Triton. These are research options, not current integrations or capabilities in the Jorvellan concept." /><div className="tech-grid">{[['NVIDIA NeMo','A potential option for future model development and evaluation.'],['NVIDIA NIM','A possible model-serving approach to assess in a later architecture.'],['NVIDIA RAPIDS','Potential components for future accelerated data exploration.'],['NVIDIA Triton','A possible inference-serving option to evaluate in a future phase.']].map(([name,desc])=><article className="tech-card" key={name}><small>PROPOSED OPTION · NOT INTEGRATED</small><h3>{name}</h3><p>{desc}</p></article>)}</div><p className="scope-note">Jorvellan does not currently represent any NVIDIA integration, certification or endorsement, live AI inference, or automated workflow execution.</p></div></section>
         </>}
         {page === 'features' && <section className="section-space feature-groups-section"><div className="site-container"><div className="feature-group-grid">{featureGroups.map((group) => <article className="feature-group" key={group.number}><div className="feature-group-heading"><span>{group.number}</span><p className="eyebrow">{group.label}</p><h2>{group.title}</h2><p className="feature-group-intro">{group.intro}</p></div><ul>{group.items.map(([title, description]) => <li key={title}><h3>{title}</h3><p>{description}</p></li>)}</ul></article>)}</div><p className="scope-note">Jorvellan is a product concept. Records and observations are entered or prepared as sample data; live process mining, integrations, automatic monitoring, live AI inference and automatic workflow execution are not included.</p></div></section>}
         {page === 'how-it-works' && <section className="section-space workflow-section"><div className="site-container"><SectionHeading eyebrow="A CONNECTED, PEOPLE-LED FLOW" title="Each step gives the next one useful context." text="Start from documented process information, add a clear map and observations, then let the people responsible review potential improvements and track follow-through."/><ol className="workflow-flow">{workflowSteps.map(([number, title, description]) => <li key={number}><span className="workflow-step-number">{number}</span><div><h3>{title}</h3><p>{description}</p></div></li>)}</ol><p className="scope-note">The initial concept uses information entered by people or prepared as sample data. It does not connect to enterprise systems or automatically monitor live workflows. Any suggested insight requires human review.</p></div></section>}
@@ -510,6 +509,7 @@ function App() {
     const page = appRoot?.dataset.page || 'home';
     const portalData = JSON.parse(appRoot?.dataset.props || '{}');
     const [menuOpen, setMenuOpen] = useState(false);
+    const [activeHomeSection, setActiveHomeSection] = useState('home');
     const [cookieChoice, setCookieChoice] = useState(readCookieConsent);
     const menuButtonRef = useRef(null);
     const headerRef = useRef(null);
@@ -523,11 +523,41 @@ function App() {
         setCookieChoice(choice);
     };
     const reopenCookieSettings = () => setCookieChoice(null);
+    useEffect(() => {
+        if (page !== 'home') {
+            return undefined;
+        }
+
+        const sectionIds = ['features', 'how-it-works', 'about'];
+        const updateActiveSection = () => {
+            const activationLine = window.scrollY + (headerRef.current?.offsetHeight || 0) + 120;
+            let activeSection = 'home';
+
+            for (const sectionId of sectionIds) {
+                const section = document.getElementById(sectionId);
+                const sectionTop = section ? section.getBoundingClientRect().top + window.scrollY : Number.POSITIVE_INFINITY;
+                if (sectionTop <= activationLine) {
+                    activeSection = sectionId;
+                }
+            }
+
+            setActiveHomeSection(activeSection);
+        };
+
+        updateActiveSection();
+        window.addEventListener('scroll', updateActiveSection, { passive: true });
+        window.addEventListener('resize', updateActiveSection);
+
+        return () => {
+            window.removeEventListener('scroll', updateActiveSection);
+            window.removeEventListener('resize', updateActiveSection);
+        };
+    }, [page]);
     const navigationItems = [
-        { page: 'home', label: 'Home', href: '/' },
-        { page: 'features', label: 'Features', href: page === 'home' ? '#features' : '/features' },
-        { page: 'how-it-works', label: 'How it works', href: page === 'home' ? '#how-it-works' : '/how-it-works' },
-        { page: 'about', label: 'About', href: page === 'home' ? '#about' : '/about' },
+        { page: 'home', label: 'Home', href: '/', active: page === 'home' && activeHomeSection === 'home' },
+        { page: 'features', label: 'Features', href: page === 'home' ? '#features' : '/features', active: page === 'home' ? activeHomeSection === 'features' : page === 'features' },
+        { page: 'how-it-works', label: 'How it works', href: page === 'home' ? '#how-it-works' : '/how-it-works', active: page === 'home' ? activeHomeSection === 'how-it-works' : page === 'how-it-works' },
+        { page: 'about', label: 'About', href: page === 'home' ? '#about' : '/about', active: page === 'home' ? activeHomeSection === 'about' : page === 'about' },
         { page: 'pricing', label: 'Pricing', href: '/pricing' },
         { page: 'contact', label: 'Contact', href: '/contact' },
     ];
@@ -561,7 +591,7 @@ function App() {
                     <Brand current={page === 'home'} />
                     <button ref={menuButtonRef} className={`mobile-menu-toggle${menuOpen ? ' is-open' : ''}`} type="button" aria-label={menuOpen ? 'Close menu' : 'Open menu'} aria-expanded={menuOpen} aria-controls="primary-navigation" onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
                     <nav id="primary-navigation" className={menuOpen ? 'main-nav open' : 'main-nav'} aria-label="Main navigation">
-                        {navigationItems.map((item) => <a key={item.page} className={page === item.page ? 'is-current' : undefined} href={item.href} aria-current={page === item.page ? 'page' : undefined} onClick={closeMenu}>{item.label}</a>)}
+                        {navigationItems.map((item) => <a key={item.page} className={item.active ?? page === item.page ? 'is-current' : undefined} href={item.href} aria-current={item.active ?? page === item.page ? (page === 'home' && item.page !== 'home' ? 'location' : 'page') : undefined} onClick={closeMenu}>{item.label}</a>)}
                     </nav>
                     <a className={`nav-product${page === 'product' ? ' is-current' : ''}`} href="/product" aria-current={page === 'product' ? 'page' : undefined} onClick={closeMenu}>Explore product <Arrow /></a>
                 </div>
