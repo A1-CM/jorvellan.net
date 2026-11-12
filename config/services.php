@@ -46,4 +46,10 @@ return [
         'fallback_model' => env('GROQ_FALLBACK_MODEL', 'openai/gpt-oss-20b'),
     ],
 
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', env('APP_URL').'/auth/google/callback'),
+    ],
+
 ];

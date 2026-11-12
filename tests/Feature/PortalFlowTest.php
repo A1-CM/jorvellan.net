@@ -7,6 +7,7 @@ use App\Models\ContactSubmission;
 use App\Models\Plan;
 use App\Models\SimulatedPayment;
 use App\Models\Subscription;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -16,7 +17,7 @@ class PortalFlowTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_pricing_and_dashboard_use_seeded_database_records(): void
+    public function test_pricing_remains_available_and_workspace_is_private_and_empty(): void
     {
         $pricingResponse = $this->get(route('pricing'));
 
@@ -24,13 +25,14 @@ class PortalFlowTest extends TestCase
             ->assertSee('Team')
             ->assertSee('&quot;price_cents&quot;:4900', false);
 
-        $dashboardResponse = $this->get(route('dashboard.demo'));
+        $this->get(route('dashboard.demo'))->assertRedirect(route('login'));
 
-        $dashboardResponse->assertOk()
-            ->assertSee('Customer onboarding')
-            ->assertSee('Approval queue has variable wait time')
-            ->assertSee('Review close calendar dependencies')
-            ->assertSee('&quot;processes&quot;:8', false);
+        $user = User::factory()->unverified()->create();
+        $this->actingAs($user)->get(route('dashboard'))
+            ->assertOk()
+            ->assertSee('data-page="dashboard"', false)
+            ->assertSee('&quot;empty&quot;:true', false)
+            ->assertDontSee('Customer onboarding');
 
         $this->assertSame(3, Plan::query()->count());
     }

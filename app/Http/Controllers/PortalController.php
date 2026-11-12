@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ImprovementAction;
 use App\Models\Plan;
-use App\Models\ProcessObservation;
-use App\Models\ProcessRecord;
 use App\Models\SimulatedPayment;
 use App\Models\Subscription;
 use App\Services\TurnstileVerifier;
@@ -144,52 +141,6 @@ class PortalController extends Controller
         $subscription = Subscription::query()->with(['plan', 'simulatedPayment'])->where('reference', $reference)->firstOrFail();
 
         return $this->page('checkout-complete', 'Demo checkout complete | Jorvellan', 'Your simulated checkout completed successfully. No payment was processed.', ['subscription' => $subscription]);
-    }
-
-    public function dashboard(): View
-    {
-        $processes = ProcessRecord::query()
-            ->with(['workflowStages', 'observations', 'improvementActions'])
-            ->orderBy('name')
-            ->get();
-
-        $observations = ProcessObservation::query()
-            ->with(['processRecord:id,name', 'workflowStage:id,name'])
-            ->latest('observed_on')
-            ->take(10)
-            ->get();
-
-        $actions = ImprovementAction::query()
-            ->with('processRecord:id,name')
-            ->orderByRaw("CASE status WHEN 'In progress' THEN 0 WHEN 'In review' THEN 1 WHEN 'Planned' THEN 2 ELSE 3 END")
-            ->orderBy('due_on')
-            ->take(8)
-            ->get();
-
-        return $this->page('dashboard', 'Operations demo | Jorvellan', 'Database-backed illustrative sample operations dashboard.', [
-            'stats' => [
-                'processes' => $processes->count(),
-                'departments' => $processes->pluck('department')->unique()->count(),
-                'stages' => $processes->sum(fn (ProcessRecord $process): int => $process->workflowStages->count()),
-                'observations' => ProcessObservation::query()->count(),
-                'reviews' => ProcessObservation::query()->where('review_status', 'needs_review')->count(),
-                'actions_open' => ImprovementAction::query()->whereNotIn('status', ['Complete', 'Cancelled'])->count(),
-                'actions_late' => ImprovementAction::query()->whereNotIn('status', ['Complete', 'Cancelled'])->whereDate('due_on', '<', now()->toDateString())->count(),
-            ],
-            'processes' => $processes->map(fn (ProcessRecord $process): array => [
-                'name' => $process->name,
-                'department' => $process->department,
-                'owner' => $process->owner,
-                'status' => $process->status,
-                'risk' => $process->risk_level,
-                'version' => $process->version,
-                'last_reviewed' => $process->last_reviewed_at?->format('M j, Y'),
-                'purpose' => $process->purpose,
-                'stages' => $process->workflowStages->map(fn ($stage): array => ['name' => $stage->name, 'team' => $stage->owner_team, 'status' => $stage->status, 'expected_minutes' => $stage->expected_minutes, 'observed_minutes' => $stage->observed_minutes, 'handoff_note' => $stage->handoff_note]),
-            ]),
-            'observations' => $observations->map(fn (ProcessObservation $observation): array => ['process' => $observation->processRecord?->name, 'stage' => $observation->workflowStage?->name, 'category' => $observation->category, 'priority' => $observation->priority, 'title' => $observation->title, 'detail' => $observation->detail, 'status' => $observation->review_status, 'observed_on' => $observation->observed_on->format('M j, Y')]),
-            'actions' => $actions->map(fn (ImprovementAction $action): array => ['process' => $action->processRecord?->name, 'title' => $action->title, 'description' => $action->description, 'owner' => $action->owner, 'priority' => $action->priority, 'status' => $action->status, 'due_on' => $action->due_on?->format('M j, Y'), 'outcome' => $action->outcome]),
-        ]);
     }
 
     private function page(string $page, string $title, string $description, array $portalData = []): View

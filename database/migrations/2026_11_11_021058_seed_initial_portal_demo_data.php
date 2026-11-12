@@ -1,6 +1,6 @@
 <?php
 
-use Database\Seeders\PortalDemoSeeder;
+use Database\Seeders\PortalPlanSeeder;
 use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
@@ -10,7 +10,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        app(PortalDemoSeeder::class)->run();
+        app(PortalPlanSeeder::class)->run();
     }
 
     /**
